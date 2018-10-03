@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">AppClassAssist</string>
+    <string name="codigoClase">Código de clase</string>
+    <string name="correoClase">Correo de profesor</string>
+    <string name="activarRegistrarEnClase">Registrarme en una clase</string>
+    <string name="registrarEnClase">Registrar</string>
+    <string name="claseCorreo">Correo de profesor</string>
+    <string name="claseCodigo">Código</string>
+    <string name="personaId">Id Control</string>
+    <string name="personaNombre">Nombre</string>
+    <string name="personaApaterno">Apellido Paterno</string>
+    <string name="personaAmaterno">Apellido Materno</string>
+    <string name="personaCorreo">Correo</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="cancelar">Cancelar</string>
+
+    <string name="noCompatible">No compatible</string>
+    <string name="noBluetooth">Lamentablemente su dispositivo no dispone del módulo Bluetooth</string>
+    <string name="salir">Salir</string>
+    <string name="errorCampos">Uno o más campos no tienen valor</string>
+    <string name="errorRegistro">No se pudo registrar</string>
+    <string name="registroCorrecto">Registro correcto</string>
+    <string name="alumnoRegistroExistente">Ya esta registrado</string>
+    <string name="alumnoRegistroCorrecto">Registro realizado</string>
 </resources>
