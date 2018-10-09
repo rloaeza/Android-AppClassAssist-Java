@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,9 +19,12 @@ public class AppClassAssist extends AppCompatActivity {
     private Button bRegistrar;
     private EditText etCorreo;
     private EditText etCodigo;
+
+    private  boolean isVisibleBT;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_app_class_assist);
 
         BluetoothAdapter BTAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -38,21 +40,24 @@ public class AppClassAssist extends AppCompatActivity {
 
 
             ivAsistir = findViewById(R.id.ivAsistir);
-            bRegistrar = findViewById(R.id.bRegistrar);
+            bRegistrar = findViewById(R.id.bAdministrarClases);
 
             ivAsistir.setOnClickListener(e -> {
-                Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-                discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, tiempoVisible);
-                startActivityForResult(discoverableIntent, btRequestCode);
+                if(!isVisibleBT) {
+                    Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+                    discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, tiempoVisible);
+                    startActivityForResult(discoverableIntent, btRequestCode);
+                }
 
             });
 
             bRegistrar.setOnClickListener(e -> {
-                Intent intent = new Intent(this, AppClassRegistrar.class);
-                startActivity(intent);
+
+
             });
         }
 
+        isVisibleBT = false;
     }
 
     @Override
@@ -60,12 +65,14 @@ public class AppClassAssist extends AppCompatActivity {
         if(requestCode==btRequestCode) {
             if(resultCode==tiempoVisible) {
 
-                ivAsistir.setBackgroundResource(R.drawable.asistir_si);
+                ivAsistir.setBackgroundResource(R.drawable.aqui_si);
+                isVisibleBT = true;
                 new Handler().postDelayed(new Runnable() {
 
                     @Override
                     public void run() {
-                        ivAsistir.setBackgroundResource(R.drawable.asistir_no);
+                        ivAsistir.setBackgroundResource(R.drawable.aqui_no);
+                        isVisibleBT=false;
                     }
                 }, tiempoVisible*1000);
             }
