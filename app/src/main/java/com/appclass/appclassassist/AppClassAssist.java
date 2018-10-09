@@ -52,7 +52,8 @@ public class AppClassAssist extends AppCompatActivity {
             });
 
             bRegistrar.setOnClickListener(e -> {
-
+                Intent intent = new Intent(this, AppClassLogin.class);
+                startActivity(intent);
 
             });
         }

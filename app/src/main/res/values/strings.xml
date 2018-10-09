@@ -4,4 +4,11 @@
     <string name="noCompatible">No compatible</string>
     <string name="noBluetooth">Lamentablemente su dispositivo no dispone del módulo Bluetooth</string>
     <string name="salir">Salir</string>
+    <string name="loginEmailHint">Correo electrónico</string>
+    <string name="loginClaveHint">Contraseña</string>
+    <string name="loginAcceder">Acceder</string>
+    <string name="loginRegistrar" >Registrar</string>
+    <string name="Regresar">Regresar</string>
+    <string name="loginOlvideClave">Olvidé mi contraseña</string>
+    <string name="loginResetClave">En breve recibirá un mensaje por correo con las instrucciona para reiniciar su clave.</string>
 </resources>
