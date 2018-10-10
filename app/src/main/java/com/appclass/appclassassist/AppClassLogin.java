@@ -12,11 +12,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.appclass.appclassassist.db.Usuario;
+import com.appclass.appclassassist.db.Refs;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class AppClassLogin extends AppCompatActivity {
 
@@ -28,7 +35,15 @@ public class AppClassLogin extends AppCompatActivity {
     private EditText etCorreo;
     private EditText etClave;
 
+    private EditText etIdControl ;
+    private EditText etNombre;
+    private EditText etApellidos;
+
+
+
     private FirebaseAuth.AuthStateListener authStateListener;
+    private FirebaseDatabase firebaseDatabase ;
+    private DatabaseReference databaseReference;
 
     @Override
     protected void onStart() {
@@ -59,8 +74,14 @@ public class AppClassLogin extends AppCompatActivity {
 
         etCorreo = findViewById(R.id.etCorreo);
         etClave = findViewById(R.id.etClave);
+        etIdControl = findViewById(R.id.etIdControl);
+        etNombre = findViewById(R.id.etNombre);
+        etApellidos = findViewById(R.id.etApellidos);
 
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference(Refs.AppClass).child(Refs.usuarios);
 
+        //FirebaseAuth.getInstance().signOut();
 
         bRegresar.setOnClickListener( e -> finish() );
 
@@ -114,6 +135,8 @@ public class AppClassLogin extends AppCompatActivity {
 
         });
 
+
+
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -123,6 +146,16 @@ public class AppClassLogin extends AppCompatActivity {
                 }
             }
         };
+
+
+
+
+
+
+
+
+
+
     }
 
 
@@ -141,6 +174,7 @@ public class AppClassLogin extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
 
                 if(task.isSuccessful()) {
+
                     iniciarAppClass();
                 }
                 else {
@@ -150,6 +184,30 @@ public class AppClassLogin extends AppCompatActivity {
         });
     }
 
+    private void crearAlumno() {
+        String correo = FirebaseAuth.getInstance().getCurrentUser().getEmail().toString();
+        String correoFix=correo.replace(".", "+");
+        String btMac = "Aqui va la MAC de Bluetooth";
+        databaseReference.child(correoFix).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!dataSnapshot.exists()) {
+                    String idControl = etIdControl.getText().toString();
+                    String nombre = etNombre.getText().toString();
+                    String apellidos = etApellidos.getText().toString();
+                    databaseReference.child(correoFix).setValue(
+                            new Usuario(idControl, nombre, apellidos, correo, btMac)
+                    );
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 
 
     private void registrar(String email, String password) {
@@ -157,6 +215,7 @@ public class AppClassLogin extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if( task.isSuccessful()) {
+                    crearAlumno();
                     Toast.makeText(AppClassLogin.this, getString(R.string.loginRegistrarCorrecto), Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(AppClassLogin.this, getString(R.string.loginErrorRegistrar), Toast.LENGTH_SHORT).show();
@@ -165,6 +224,7 @@ public class AppClassLogin extends AppCompatActivity {
         });
     }
     private void iniciarAppClass() {
+
 
         Intent intent = new Intent(this, AppClassClases.class);
         startActivityForResult(intent, 1);

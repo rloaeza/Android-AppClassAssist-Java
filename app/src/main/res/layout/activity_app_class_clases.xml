@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/etCodigoClase"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -24,7 +24,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/bAgregarClase"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -36,9 +36,10 @@
         android:text="@string/clasesAgregar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+        app:layout_constraintTop_toBottomOf="@+id/etCodigoClase" />
 
     <ListView
+        android:id="@+id/lvClases"
         android:layout_width="368dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -50,7 +51,7 @@
         app:layout_constraintBottom_toTopOf="@+id/bRegresar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/bAgregarClase" />
 
     <ImageView
         android:id="@+id/imageView3"

@@ -27,4 +27,7 @@
     <string name="loginApellidos">Apellidos</string>
     <string name="clasesCodigo">Código de clase</string>
     <string name="clasesAgregar">Agregar clase</string>
+    <string name="clasesAgregadaSatisfactoriamente">Clase agregada satisfactoriamente</string>
+    <string name="clasesAgregadaError">Clase agregada satisfactoriamente</string>
+
 </resources>
