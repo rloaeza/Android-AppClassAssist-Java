@@ -11,4 +11,20 @@
     <string name="Regresar">Regresar</string>
     <string name="loginOlvideClave">Olvidé mi contraseña</string>
     <string name="loginResetClave">En breve recibirá un mensaje por correo con las instrucciona para reiniciar su clave.</string>
+
+    <string name="loginErrorRegistrar">Error al registrar usuario, verifique datos por favor</string>
+    <string name="loginRegistrarCorrecto">¡Usuario registrado correctamente!</string>
+
+    <string name="loginVerificarClave">Verifique su clave</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="loginCamposVacios">Faltan datos de entrada</string>
+    <string name="loginClaveError">Las claves no coinciden</string>
+
+    <string name="loginErrorIniciar">Error en usuario y/o constraseña</string>
+    <string name="loginId">Id Control</string>
+    <string name="loginNombre">Nombre</string>
+    <string name="loginApellidos">Apellidos</string>
+    <string name="clasesCodigo">Código de clase</string>
+    <string name="clasesAgregar">Agregar clase</string>
 </resources>
