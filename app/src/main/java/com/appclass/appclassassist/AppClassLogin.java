@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import com.appclass.appclassassist.db.Funciones;
 import com.appclass.appclassassist.db.Usuario;
-import com.appclass.appclassassist.db.UsuarioBad;
 import com.appclass.appclassassist.db.Refs;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
