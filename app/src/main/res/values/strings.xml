@@ -25,6 +25,10 @@
     <string name="loginId">Id Control</string>
     <string name="loginNombre">Nombre</string>
     <string name="loginApellidos">Apellidos</string>
+    <string name="loginBluetooth">Bluetooth</string>
+    <string name="loginBluetoothSolicitar">¿Bluetooth MAC?</string>
+
+
     <string name="clasesCodigo">Código de clase</string>
     <string name="clasesAgregar">Agregar</string>
     <string name="clasesAgregadaSatisfactoriamente">Clase agregada satisfactoriamente</string>

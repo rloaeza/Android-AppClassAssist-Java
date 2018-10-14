@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,6 +48,10 @@ public class AppClassLogin extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase ;
     private DatabaseReference databaseReference;
 
+    private String btMac;
+
+    private boolean validado;
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -57,6 +62,7 @@ public class AppClassLogin extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == Activity.RESULT_OK && requestCode == 1) {
+
             finish();
         }
     }
@@ -67,7 +73,7 @@ public class AppClassLogin extends AppCompatActivity {
         getSupportActionBar().hide();
 
         setContentView(R.layout.activity_app_class_login);
-
+        validado = false;
         bRegistrar = findViewById(R.id.bRegistrar);
         bRegresar = findViewById(R.id.bRegresar);
         bOlvideClave = findViewById(R.id.bOlvideClave);
@@ -83,6 +89,9 @@ public class AppClassLogin extends AppCompatActivity {
         databaseReference = firebaseDatabase.getReference(Refs.AppClass).child(Refs.usuarios);
 
 
+
+
+        btMac = Funciones.getBluetoothMAC(this);
 
         bRegresar.setOnClickListener( e -> finish() );
 
@@ -103,7 +112,7 @@ public class AppClassLogin extends AppCompatActivity {
 
 
 
-            if(verificarCorreoClave() &&  verificarDatos() ) {
+            if(  verificarDatos() && verificarCorreoClave()) {
 
                 AlertDialog.Builder builderClave = new AlertDialog.Builder(this);
                 builderClave.setTitle( getString(R.string.loginVerificarClave) );
@@ -154,6 +163,26 @@ public class AppClassLogin extends AppCompatActivity {
 
 
     private boolean verificarDatos() {
+
+        if(btMac==null) {
+            AlertDialog.Builder builderClave = new AlertDialog.Builder(this);
+            builderClave.setTitle( getString(R.string.loginBluetoothSolicitar) );
+            final EditText etBTMac = new EditText(this);
+            etBTMac.setInputType(InputType.TYPE_CLASS_TEXT |
+                    InputType.TYPE_CLASS_TEXT);
+            builderClave.setView(etBTMac);
+            builderClave.setPositiveButton(getString(R.string.aceptar), (dialog, which) -> {
+                btMac = etBTMac.getText().toString();
+            });
+            builderClave.setNegativeButton(getString(R.string.cancelar), (dialog, which) -> dialog.cancel());
+            builderClave.show();
+            return false;
+
+        }
+        else {
+            btMac = btMac.toUpperCase();
+        }
+
         if(etNombre.getVisibility() == View.INVISIBLE) {
             etNombre.setVisibility(View.VISIBLE);
             etApellidos.setVisibility(View.VISIBLE);
@@ -198,7 +227,8 @@ public class AppClassLogin extends AppCompatActivity {
     private void crearUsuario() {
         String correo = Funciones.getCorreo();
         String correoFix=Funciones.getCorreoFix(correo);
-        String btMac = Funciones.getBluetoothMAC(this);
+
+
         databaseReference.child(correoFix).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -206,6 +236,7 @@ public class AppClassLogin extends AppCompatActivity {
                     String idControl = etIdControl.getText().toString();
                     String nombre = etNombre.getText().toString();
                     String apellidos = etApellidos.getText().toString();
+
                     databaseReference.child(correoFix).setValue(
                             new Usuario(correo, nombre, apellidos, idControl, btMac, false)
                     );
@@ -235,11 +266,7 @@ public class AppClassLogin extends AppCompatActivity {
         });
     }
     private void iniciarAppClass() {
-
-
         Intent intent = new Intent(this, AppClassClases.class);
         startActivityForResult(intent, 1);
-
-
     }
 }

@@ -1,15 +1,24 @@
 package com.appclass.appclassassist;
 
+import android.Manifest;
+import android.app.admin.DeviceAdminReceiver;
+import android.app.admin.DevicePolicyManager;
 import android.bluetooth.BluetoothAdapter;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+
+import com.appclass.appclassassist.db.Funciones;
+import com.appclass.appclassassist.db.Refs;
 
 public class AppClassAssist extends AppCompatActivity {
     ImageView ivAsistir;
@@ -37,6 +46,11 @@ public class AppClassAssist extends AppCompatActivity {
                     .show();
         }
         else {
+
+            ActivityCompat.requestPermissions(this, new String[]{
+                    Manifest.permission.BLUETOOTH_ADMIN,
+                    Manifest.permission.BLUETOOTH
+            }, 1);
 
 
             ivAsistir = findViewById(R.id.ivAsistir);
