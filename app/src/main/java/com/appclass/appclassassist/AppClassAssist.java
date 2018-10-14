@@ -28,7 +28,7 @@ public class AppClassAssist extends AppCompatActivity {
         setContentView(R.layout.activity_app_class_assist);
 
         BluetoothAdapter BTAdapter = BluetoothAdapter.getDefaultAdapter();
-        if(BTAdapter == null && false) {
+        if(BTAdapter == null) {
             new AlertDialog.Builder(this)
                     .setTitle(getString(R.string.noCompatible))
                     .setMessage(getString(R.string.noBluetooth))

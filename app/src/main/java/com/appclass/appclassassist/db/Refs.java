@@ -2,6 +2,8 @@ package com.appclass.appclassassist.db;
 
 public class Refs {
 
+    public static String TAG = "AppClassDebug";
+
     public static String AppClass = "AppClass";
     public static String instructores = "Instructores";
     public static String clases = "Clases";

@@ -8,11 +8,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.appclass.appclassassist.db.Funciones;
 import com.appclass.appclassassist.db.Usuario;
+import com.appclass.appclassassist.db.UsuarioBad;
 import com.appclass.appclassassist.db.Refs;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -56,7 +59,6 @@ public class AppClassLogin extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == Activity.RESULT_OK && requestCode == 1) {
             finish();
-
         }
     }
 
@@ -81,7 +83,7 @@ public class AppClassLogin extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference(Refs.AppClass).child(Refs.usuarios);
 
-        //FirebaseAuth.getInstance().signOut();
+
 
         bRegresar.setOnClickListener( e -> finish() );
 
@@ -100,7 +102,9 @@ public class AppClassLogin extends AppCompatActivity {
 
         bRegistrar.setOnClickListener( e -> {
 
-            if(verificarCorreoClave()) {
+
+
+            if(verificarCorreoClave() &&  verificarDatos() ) {
 
                 AlertDialog.Builder builderClave = new AlertDialog.Builder(this);
                 builderClave.setTitle( getString(R.string.loginVerificarClave) );
@@ -147,15 +151,23 @@ public class AppClassLogin extends AppCompatActivity {
             }
         };
 
+    }
 
 
-
-
-
-
-
-
-
+    private boolean verificarDatos() {
+        if(etNombre.getVisibility() == View.INVISIBLE) {
+            etNombre.setVisibility(View.VISIBLE);
+            etApellidos.setVisibility(View.VISIBLE);
+            etIdControl.setVisibility(View.VISIBLE);
+            return false;
+        }
+        if(etIdControl.getText().toString().isEmpty())
+            return false;
+        if(etNombre.getText().toString().isEmpty())
+            return false;
+        if(etApellidos.getText().toString().isEmpty())
+            return false;
+        return true;
     }
 
 
@@ -184,10 +196,10 @@ public class AppClassLogin extends AppCompatActivity {
         });
     }
 
-    private void crearAlumno() {
-        String correo = FirebaseAuth.getInstance().getCurrentUser().getEmail().toString();
-        String correoFix=correo.replace(".", "+");
-        String btMac = "Aqui va la MAC de Bluetooth";
+    private void crearUsuario() {
+        String correo = Funciones.getCorreo();
+        String correoFix=Funciones.getCorreoFix(correo);
+        String btMac = Funciones.getBluetoothMAC(this);
         databaseReference.child(correoFix).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -196,7 +208,7 @@ public class AppClassLogin extends AppCompatActivity {
                     String nombre = etNombre.getText().toString();
                     String apellidos = etApellidos.getText().toString();
                     databaseReference.child(correoFix).setValue(
-                            new Usuario(idControl, nombre, apellidos, correo, btMac)
+                            new Usuario(correo, nombre, apellidos, idControl, btMac, false)
                     );
                 }
 
@@ -215,7 +227,7 @@ public class AppClassLogin extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if( task.isSuccessful()) {
-                    crearAlumno();
+                    crearUsuario();
                     Toast.makeText(AppClassLogin.this, getString(R.string.loginRegistrarCorrecto), Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(AppClassLogin.this, getString(R.string.loginErrorRegistrar), Toast.LENGTH_SHORT).show();

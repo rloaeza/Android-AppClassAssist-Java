@@ -7,14 +7,19 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.appclass.appclassassist.db.Clase;
+import com.appclass.appclassassist.db.Funciones;
 import com.appclass.appclassassist.db.Refs;
 import com.appclass.appclassassist.db.Usuario;
+import com.appclass.appclassassist.db.UsuarioBad;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,10 +27,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AppClassClases extends AppCompatActivity {
 
     private Button bRegresar;
     private Button bAgregarClase;
+    private Button bCerrarSesion;
 
     private EditText etCodigoClase;
 
@@ -37,6 +46,11 @@ public class AppClassClases extends AppCompatActivity {
     private Usuario usuario;
     private String codigoClase;
 
+
+
+    private List<Clase> misClases;
+    private ArrayAdapter<Clase> arrayAdapter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,14 +59,37 @@ public class AppClassClases extends AppCompatActivity {
 
         bRegresar = findViewById(R.id.bRegresar);
         bAgregarClase = findViewById(R.id.bAgregarClase);
+        bCerrarSesion = findViewById(R.id.bCerrarSesion);
         etCodigoClase = findViewById(R.id.etCodigoClase);
         lvClases = findViewById(R.id.lvClases);
 
+
+
+
+
+        misClases = new ArrayList<>();
+        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, misClases);
+
+        lvClases.setAdapter(arrayAdapter);
+
+
+
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference(Refs.AppClass).child(Refs.clases);
+        databaseReference = firebaseDatabase.getReference(Refs.AppClass);
 
 
-        obtenerAlumno( FirebaseAuth.getInstance().getCurrentUser().getEmail().toString() );
+        obtenerAlumno(Funciones.getCorreoFix());
+
+
+
+
+
+
+
+        bCerrarSesion.setOnClickListener( e -> {
+            FirebaseAuth.getInstance().signOut();
+            regresarInicio();
+        });
 
         bRegresar.setOnClickListener(e -> {
             regresarInicio();
@@ -60,61 +97,49 @@ public class AppClassClases extends AppCompatActivity {
 
 
         bAgregarClase.setOnClickListener( e-> {
-
-            String correo = FirebaseAuth.getInstance().getCurrentUser().getEmail().toString();
-            String correoFix=correo.replace(".", "+");
-            String codigoClase = etCodigoClase.getText().toString();
-            String btMac = "Aqui va la MAC de Bluetooth";
-
-            databaseReference.child(codigoClase).addListenerForSingleValueEvent(new ValueEventListener() {
-
+            if(etCodigoClase.getText().toString().isEmpty()) {
+                Toast.makeText(this, getText(R.string.clasesAgregarFaltaCodigo), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            codigoClase = etCodigoClase.getText().toString();
+            obtenerAlumno(Funciones.getCorreoFix());
+            databaseReference.child(Refs.clases).child(codigoClase).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists()) {
 
-                        databaseReference.child(codigoClase).child(Refs.alumnos).child(correoFix).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if(!dataSnapshot.exists()) {
+                        databaseReference.child(Refs.clases).child(codigoClase).child(Refs.alumnos).child(Funciones.getCorreoFix(usuario.getCorreo())).setValue(usuario);
+                        Clase clase = dataSnapshot.getValue(Clase.class);
+                        databaseReference.child(Refs.usuarios).child(Funciones.getCorreoFix(usuario.getCorreo())).child(Refs.clases).child(clase.getCodigo()).setValue(clase);
 
-                                    databaseReference.child(codigoClase).child(Refs.alumnos).child(correoFix).setValue(
-                                            new Usuario(usuario.getIdControl(), usuario.getNombre(), usuario.getaPaterno(), usuario.getaMaterno(), usuario.getCorreo(), usuario.getBtMac())
-                                    );
-                                    etCodigoClase.setText("");
-                                    Toast.makeText(AppClassClases.this, getString(R.string.clasesAgregadaSatisfactoriamente), Toast.LENGTH_SHORT).show();
-                                }
-                            }
+                        etCodigoClase.setText("");
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) { }
-                        });
+
+
+                        Toast.makeText(AppClassClases.this, getString(R.string.clasesAgregadaSatisfactoriamente), Toast.LENGTH_SHORT).show();
+
                     }
                     else {
                         Toast.makeText(AppClassClases.this, getString(R.string.clasesAgregadaError), Toast.LENGTH_SHORT).show();
                     }
                 }
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
                 }
             });
         });
 
 
 
-        databaseReference.orderByChild("Alumnos").equalTo("robertoloaeza@tecuruapan+edu+mx").addValueEventListener(new ValueEventListener() {
+        databaseReference.child(Refs.usuarios).child(Funciones.getCorreoFix()).child(Refs.clases).orderByChild(Clase.ordenarPorCampo).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.e("AppClass", dataSnapshot.toString());
-                for(DataSnapshot dato : dataSnapshot.getChildren()) {
-
-                    Clase c = dato.getValue(Clase.class);
-
-                    Log.e("AppClass", c.getNombre());
-
-
+                misClases.clear();
+                for(DataSnapshot data : dataSnapshot.getChildren()) {
+                    misClases.add(data.getValue(Clase.class)) ;
                 }
+                arrayAdapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -127,13 +152,10 @@ public class AppClassClases extends AppCompatActivity {
 
     }
 
-    private void obtenerAlumno (String correo) {
 
-        String correoFix=correo.replace(".", "+");
-        DatabaseReference databaseReferenceTemp;
+    private void obtenerAlumno (String correoFix) {
 
-        databaseReferenceTemp = firebaseDatabase.getReference(Refs.AppClass).child(Refs.usuarios).child(correoFix);
-        databaseReferenceTemp.addListenerForSingleValueEvent(new ValueEventListener() {
+        firebaseDatabase.getReference(Refs.AppClass).child(Refs.usuarios).child(correoFix).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
@@ -146,7 +168,7 @@ public class AppClassClases extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                usuario = null;
             }
         });
 
@@ -158,13 +180,12 @@ public class AppClassClases extends AppCompatActivity {
     }
 
     private void regresarInicio() {
-        Intent intent = getIntent();
-        setResult(Activity.RESULT_OK, intent);
+        setResult(Activity.RESULT_OK, getIntent());
         finish();
     }
     @Override
     public void onBackPressed() {
-        
+
         regresarInicio();
     }
 }

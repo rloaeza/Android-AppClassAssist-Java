@@ -26,8 +26,11 @@
     <string name="loginNombre">Nombre</string>
     <string name="loginApellidos">Apellidos</string>
     <string name="clasesCodigo">Código de clase</string>
-    <string name="clasesAgregar">Agregar clase</string>
+    <string name="clasesAgregar">Agregar</string>
     <string name="clasesAgregadaSatisfactoriamente">Clase agregada satisfactoriamente</string>
-    <string name="clasesAgregadaError">Clase agregada satisfactoriamente</string>
+    <string name="clasesAgregadaError">Error de código, clase no encontrada</string>
+    <string name="clasesAgregarFaltaCodigo">Falta código de clase</string>
+    <string name="clasesCerrarSesion">Cerrar Sesión</string>
+    <string name="clasesMisClases">Mis clases</string>
 
 </resources>
