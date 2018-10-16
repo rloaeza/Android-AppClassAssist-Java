@@ -164,6 +164,14 @@ public class AppClassLogin extends AppCompatActivity {
 
     private boolean verificarDatos() {
 
+
+
+        if(etNombre.getVisibility() == View.INVISIBLE) {
+            etNombre.setVisibility(View.VISIBLE);
+            etApellidos.setVisibility(View.VISIBLE);
+            etIdControl.setVisibility(View.VISIBLE);
+        }
+
         if(btMac==null) {
             AlertDialog.Builder builderClave = new AlertDialog.Builder(this);
             builderClave.setTitle( getString(R.string.loginBluetoothSolicitar) );
@@ -183,12 +191,7 @@ public class AppClassLogin extends AppCompatActivity {
             btMac = btMac.toUpperCase();
         }
 
-        if(etNombre.getVisibility() == View.INVISIBLE) {
-            etNombre.setVisibility(View.VISIBLE);
-            etApellidos.setVisibility(View.VISIBLE);
-            etIdControl.setVisibility(View.VISIBLE);
-            return false;
-        }
+
         if(etIdControl.getText().toString().isEmpty())
             return false;
         if(etNombre.getText().toString().isEmpty())
