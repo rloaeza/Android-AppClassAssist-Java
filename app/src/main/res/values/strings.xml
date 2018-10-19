@@ -15,7 +15,7 @@
     <string name="loginErrorRegistrar">Error al registrar usuario, verifique datos por favor</string>
     <string name="loginRegistrarCorrecto">¡Usuario registrado correctamente!</string>
 
-    <string name="loginVerificarClave">Verifique su clave</string>
+    <string name="loginVerificarClave">Verifique su contraseña</string>
     <string name="aceptar">Aceptar</string>
     <string name="cancelar">Cancelar</string>
     <string name="loginCamposVacios">Faltan datos de entrada</string>
