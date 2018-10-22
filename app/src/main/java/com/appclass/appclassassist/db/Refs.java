@@ -12,4 +12,13 @@ public class Refs {
 
 
 
+    public static String  claseCodigo = "clase Codigo";
+    public static String  claseNombre = "clase Nombre";
+    public static String usuarioNombre= "nombre usuario";
+    public static String usuarioCodigo= "codigo usuario";
+    public static String asistencia = "Asistencias";
+
+
+
+
 }

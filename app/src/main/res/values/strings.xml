@@ -15,11 +15,11 @@
     <string name="loginErrorRegistrar">Error al registrar usuario, verifique datos por favor</string>
     <string name="loginRegistrarCorrecto">¡Usuario registrado correctamente!</string>
 
-    <string name="loginVerificarClave">Verifique su contraseña</string>
+    <string name="loginVerificarClave">Repita su contraseña</string>
     <string name="aceptar">Aceptar</string>
     <string name="cancelar">Cancelar</string>
     <string name="loginCamposVacios">Faltan datos de entrada</string>
-    <string name="loginClaveError">Las claves no coinciden</string>
+    <string name="loginClaveError">Las contraseñas no coinciden</string>
 
     <string name="loginErrorIniciar">Error en usuario y/o constraseña</string>
     <string name="loginId">Id Control</string>
@@ -37,4 +37,10 @@
     <string name="clasesCerrarSesion">Cerrar Sesión</string>
     <string name="clasesMisClases">Mis clases</string>
 
+
+
+    <string name="alumnoCerrar">Cerrar</string>
+    <string name="alumnoAsistencias">Asistencias</string>
+    <string name="alumnoFaltas">Faltas</string>
+    <string name="alumnoDetallesAsistencia">Detalle de asistencias</string>
 </resources>

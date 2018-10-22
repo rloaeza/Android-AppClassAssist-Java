@@ -1,10 +1,13 @@
 package com.appclass.appclassassist;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -143,6 +146,21 @@ public class AppClassClases extends AppCompatActivity {
             }
         });
 
+
+
+
+        lvClases.setOnItemClickListener((parent, view, position, id) -> {
+            Clase c = misClases.get(position);
+
+            Intent intent = new Intent(this, AlumnoDetalle.class);
+            intent.putExtra(Refs.claseCodigo, c.getCodigo());
+            intent.putExtra(Refs.claseNombre, c.getNombre());
+            String nombreCompleto = usuario.getApellidos()+ ", "+usuario.getNombre();
+            intent.putExtra(Refs.usuarioNombre, nombreCompleto);
+            intent.putExtra(Refs.usuarioCodigo, usuario.getIdControl());
+            startActivity(intent);
+
+        });
 
 
     }
